@@ -1,0 +1,7 @@
+from .random_search import RandomSearch
+from .base import OptimizationAlgorithm
+from .bayesian_optimisation import BayesianOptimization
+from .discrete_bayesian_optimisation import DiscreteBayesianOptimization
+from .categorical_bayesian_optimisation import CategoricalBayesianOptimization
+from .combined_bayesian_optimisation import CombinedBayesianOptimization
+
