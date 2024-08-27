@@ -91,6 +91,7 @@ class GPOptimization:
             acq_function=acq_function,
             choices=choices,
             max_batch_size=2048,
+            q=1,
             unique=True
         )
         return self._process_candidate(candidate)
