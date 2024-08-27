@@ -1,6 +1,6 @@
 class OptimizationAlgorithm:
 
-    def __init__(self, **kwargs):
+    def __init__(self, *args, **kwargs):
         if 'name' in kwargs:
             self.name = kwargs['name']
         else:
@@ -9,5 +9,5 @@ class OptimizationAlgorithm:
     def train(self, history):
         raise NotImplementedError("This method should be overridden by subclasses")
 
-    def step(self, domain = None):
+    def step(self):
         raise NotImplementedError("This method should be overridden by subclasses")

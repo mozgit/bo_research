@@ -15,12 +15,8 @@ class CategoricalDomain(ProtoDomain):
         self.categorical_dimensions = categorical_dimensions
         self.bounds = None
         self.n_dimensions = len(categorical_dimensions)
-        self.logger = logging.getLogger(self.__class__.__name__)
-        if not self.logger.hasHandlers():
-            handler = logging.StreamHandler()
-            handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
-            self.logger.addHandler(handler)
-        self.logger.setLevel(logging.DEBUG)
+        self.logger = logging.getLogger(__name__)
+        self.category_mask = np.ones(self.n_dimensions)
 
 
     def is_within_domain(self, x):

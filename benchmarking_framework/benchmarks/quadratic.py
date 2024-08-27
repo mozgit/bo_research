@@ -18,7 +18,7 @@ def generate_categorical_domain(n_categorical_dims, n_categories=5):
 
 # Problem Generator
 
-def generate_quadratic_problem(n_categorical_dims = 0, n_continuous_dims = 5, n_starting_points = None):
+def generate_quadratic_problem(n_categorical_dims = 0, n_continuous_dims = 5, n_categories = 5, n_starting_points = None):
     """
     Generate a quadratic problem with the specified number of categorical and continuous dimensions.
 
@@ -28,7 +28,7 @@ def generate_quadratic_problem(n_categorical_dims = 0, n_continuous_dims = 5, n_
     domains = []
 
     if n_categorical_dims > 0:
-        categorical_domain = generate_categorical_domain(n_categorical_dims)
+        categorical_domain = generate_categorical_domain(n_categorical_dims, n_categories)
         domains.append(categorical_domain)
     if n_continuous_dims > 0:
         hypercube_domain = generate_hypercube_domain(n_continuous_dims)
@@ -63,7 +63,7 @@ def generate_quadratic_problem(n_categorical_dims = 0, n_continuous_dims = 5, n_
 
     name = ""
     if n_categorical_dims > 0:
-        name += f"{n_categorical_dims}D Categorical "
+        name += f"{n_categorical_dims}D Categorical ({n_categories} cat.) "
     if n_continuous_dims > 0:
         name += f"{n_continuous_dims}D Continuous "
     name +=f"{n_starting_points} Starting Points"

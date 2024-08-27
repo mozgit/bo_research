@@ -1,15 +1,3 @@
-import torch
-import logging
-from botorch.acquisition import LogExpectedImprovement
-from botorch.optim import optimize_acqf
-from botorch.optim import gen_batch_initial_conditions
-from benchmarking_framework.domains import Hyperplane
-from xgb_models import XGBLSSModel
-from botorch.utils.sampling import HitAndRunPolytopeSampler
-from itertools import product
-import numpy as np
-import scipy
-
 from benchmarking_framework.domains.categorical import CategoricalDomain
 from benchmarking_framework.domains.discrete import DiscreteDomain
 import torch
@@ -17,15 +5,14 @@ import logging
 import time  # Import time for timing
 from botorch.acquisition import LogExpectedImprovement
 from benchmarking_framework.algorithms.optimize import optimize_acqf_mixed_de
-from botorch.optim import optimize_acqf_mixed, optimize_acqf, optimize_acqf_discrete
-from botorch.utils.sampling import HitAndRunPolytopeSampler
+from botorch.optim import optimize_acqf_discrete
 from xgb_models import XGBLSSModel
-import numpy as np
 from typing import List, Tuple
 
-class XGBLSSDECombinedBayesianOptimization:
-    def __init__(self, domain, name=" XGBoostLSS+DE"):
+class XGBLSSDEOptimization:
+    def __init__(self, domain, opt_params = None,  name=" XGBoostLSS+DE"):
         self.domain = domain
+        self.opt_params = opt_params
         self.bounds = None
         if hasattr(domain, "bounds_tensor"):
             self.bounds = domain.bounds_tensor
@@ -50,7 +37,7 @@ class XGBLSSDECombinedBayesianOptimization:
         Y = torch.tensor(history.get_scores(), dtype=torch.double).unsqueeze(-1)
         self.train_x = X
         self.train_targets = Y
-        self.model = XGBLSSModel(X, Y, self.bounds, category_mask=self.category_mask, discrete_mask=self.discrete_mask)
+        self.model = XGBLSSModel(X, Y, self.bounds, category_mask=self.category_mask, discrete_mask=self.discrete_mask, opt_params = self.opt_params )
 
         self.logger.info("Training xgblss model with data points and scores.")
         self.logger.debug(f"Train X: {X}")
@@ -177,46 +164,3 @@ class XGBLSSDECombinedBayesianOptimization:
 
         return candidate_array
 
-
-# Example usage
-if __name__ == '__main__':
-    import numpy as np
-    from benchmarking_framework.domains import CombinedDomain
-    from benchmarking_framework import History
-    from benchmarking_framework.domains.categorical import CategoricalDomain
-    from benchmarking_framework.domains.discrete import DiscreteDomain
-    from benchmarking_framework.domains.hyperplane import Hyperplane
-    from benchmarking_framework.domains.hypercube import Hypercube
-
-    # Define individual domains
-    categorical_domain = CategoricalDomain(categorical_dimensions=[[91,92, 93], [101, 102, 103]])
-    discrete_domain = DiscreteDomain(discrete_dimensions=[[0, 1, 2, 3, 4], [-1, 0, 1]])
-    hyperplane_domain = Hyperplane(bounds=[(0, 1), (0, 1)], total=1)
-
-    # Combine domains
-    combined_domain = CombinedDomain(domains=[categorical_domain, discrete_domain, hyperplane_domain])
-
-    # Generate synthetic training data
-    np.random.seed(42)
-    num_train_points = 20
-
-    history = History()
-    for i in range(num_train_points):
-        cat_point = categorical_domain.sample()
-        dis_point = discrete_domain.sample()
-        hyp_point = hyperplane_domain.sample()
-        point = np.concatenate([cat_point[0], dis_point[0], hyp_point[0]])
-        score = np.random.random()
-        # print(f"Generated point: {point}, Score: {score}")
-        history.add_record(step=i, point=point, function_value=score, score=score)
-
-    # Initialize the Bayesian optimization
-    optimizer = XGBLSSDECombinedBayesianOptimization(combined_domain)
-
-    # Train the model with the historical data
-    optimizer.train(history)
-
-    # Perform an optimization step to find the next candidate
-    next_point = optimizer.step()
-
-    print("Next candidate point:", next_point)

@@ -48,58 +48,6 @@ class DiscreteDomain(ProtoDomain):
             samples.append(sample)
         return np.array(samples)
 
-    def encode(self, x):
-        """
-        Encodes the inputs using one-hot encoding.
-
-        Args:
-            x (array-like): The point to encode.
-
-        Returns:
-            list: One-hot encoded representation of the point.
-        """
-        encoded = []
-        for xi, values in zip(x, self.discrete_dimensions):
-            one_hot = [1 if xi == value else 0 for value in values]
-            encoded.extend(one_hot)
-        return encoded
-
-    def decode(self, x):
-        """
-        Decodes the one-hot encoded inputs back to the original values.
-
-        Args:
-            x (array-like): The one-hot encoded point to decode.
-
-        Returns:
-            list: Original representation of the point.
-        """
-        self.logger.debug(f"Starting decode with input: {x}")
-
-        # Flatten the input if it's a list of lists
-        if isinstance(x, list) and isinstance(x[0], list):
-            self.logger.debug("Flattening input list of lists")
-            x = np.array(x).flatten()
-        else:
-            x = np.array(x)
-
-        decoded = []
-        index = 0
-        for values in self.discrete_dimensions:
-            one_hot_length = len(values)
-            one_hot = x[index:index + one_hot_length]
-            self.logger.debug(f"One-hot segment: {one_hot}, Values: {values}")
-            if len(one_hot) == 0:
-                self.logger.error("Empty one-hot segment detected. Aborting decode.")
-                raise ValueError("Empty one-hot segment detected.")
-            if np.sum(one_hot) != 1:
-                self.logger.error(f"Invalid one-hot segment: {one_hot}. Aborting decode.")
-                raise ValueError(f"Invalid one-hot segment: {one_hot}")
-            decoded.append(values[np.argmax(one_hot)])
-            index += one_hot_length
-        self.logger.debug(f"Decoded output: {decoded}")
-        return decoded
-
     def generate_choices(self):
         """
         Generates all possible combinations of the discrete dimensions.

@@ -6,9 +6,9 @@ import torch
 class Hyperplane(ProtoDomain):
     def __init__(self, bounds, total=1.0):
         self.bounds = bounds
+        self.bounds_tensor = torch.tensor(self.bounds, dtype=torch.double).T
         self.total = total
         self.equalities = self._define_equalities()
-        self.bounds_tensor = torch.tensor(self.bounds, dtype=torch.double).T
         self.n_dimensions = len(self.bounds)
 
     def is_within_domain(self, x):

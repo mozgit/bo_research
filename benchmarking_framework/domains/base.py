@@ -20,3 +20,9 @@ class ProtoDomain:
 
     def get_dimensionality(self):
         return self.n_dimensions
+
+    def encode(self, x):
+        return x
+
+    def decode(self, x):
+        return x
