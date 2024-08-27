@@ -1,0 +1,12 @@
+numpy
+pandas
+pymc
+aesara
+scipy
+botorch
+torch
+gpytorch
+deepdiff
+multiprocess
+ipykernel
+xgboostlss

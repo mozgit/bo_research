@@ -18,7 +18,8 @@ install_requires=[
 'gpytorch',
 'deepdiff',
 'multiprocess',
-'ipykernel'
+'ipykernel',
+'xgboostlss'
 ],
 classifiers=[
 'Programming Language :: Python :: 3',
