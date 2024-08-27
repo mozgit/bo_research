@@ -86,6 +86,3 @@ The repository includes several Jupyter notebooks for running benchmarks with di
 
 Contributions to this repository are welcome. If you have any improvements, bug fixes, or new features to add, feel free to submit a pull request.
 
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
