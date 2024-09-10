@@ -4,7 +4,7 @@ This repository contains research and experiments related to Bayesian optimizati
 
 ## Installation
 
-To get started with this repository, follow these steps:
+To get started with this repository, you will need `python 3.11`. Once you have it, follow these steps:
 
 1. **Clone the repository:**
 
